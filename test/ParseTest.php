@@ -782,4 +782,38 @@ RAML;
         $body = $response->getBodyByType('text/xml');
         $this->assertEquals('A generic description', $body->getDescription());
     }
+
+    /** @test */
+    public function doesNotAddIdToExternalExampleJson()
+    {
+        $this->assertObjectNotHasAttribute(
+            'id',
+            $this->getExampleWithoutIdFromResourceUri('/external'),
+            'External example should not contain forced ID property'
+        );
+    }
+
+    /** @test */
+    public function doesNotAddIdToInlineExampleJson()
+    {
+        $this->assertObjectNotHasAttribute(
+            'id',
+            $this->getExampleWithoutIdFromResourceUri('/inline'),
+            'Inline example should not contain forced ID property'
+        );
+    }
+
+    protected function getExampleWithoutIdFromResourceUri($resourceUri) {
+        $example = $this->parser->parse(__DIR__ . '/fixture/exampleWithoutId.raml');
+        $resource = $example->getResourceByUri($resourceUri);
+
+        $method = $resource->getMethod('get');
+
+        $example = $method
+            ->getResponse(200)
+            ->getBodyByType('application/json')
+            ->getExample();
+
+        return json_decode($example);
+    }
 }

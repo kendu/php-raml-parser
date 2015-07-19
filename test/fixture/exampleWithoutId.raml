@@ -1,0 +1,22 @@
+#%RAML 0.8
+title: Example without ID property
+
+/external:
+    GET:
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: !include exampleWithoutId.json
+
+/inline:
+    GET:
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "title": "this is not an ID"
+                            }
+
